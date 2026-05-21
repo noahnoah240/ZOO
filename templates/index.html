@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <a id="grid-toggle">Dieren</a>
+    <div id="grid-container">  
+        
+        <div class="text-grid">
+            -Categorieën:
+            <ul>
+            {% for categorie in categorieen %}
+               <li><div class="grid-item"><a class="hover" href="{{ categorie }}">{{ loop.index }}. {{ categorie }}</a></div></li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

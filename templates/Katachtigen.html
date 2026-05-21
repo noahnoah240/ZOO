@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+  <a class="link" href="/">Dieren</a>
+  <h1>Katachtigen</h1>
+  <grid>
+    {% for katachtige in katachtigen %}
+      <li>{{ katachtige }}</li>
+      <img src="/static/Katachtigen/{{ katachtige }}.jpg" alt="" style="width: 100px; height: auto;">
+    {% endfor %}
+  </ul>
+{% endblock %}
