@@ -28,3 +28,9 @@ def katachtigen():
 @app.route("/Mensapen")
 def mensapen():
     return render_template("mensapen.html", mensapen=MENSAPEN)
+@app.route("/Categorie")
+def categorie():
+    return render_template("Categorie.html")
+@app.route("/Kaart")
+def kaart():
+    return render_template("Kaart.html")

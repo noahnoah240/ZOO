@@ -15,6 +15,7 @@ a.right{
     display: block;
     margin-left:auto;
     margin-right:0;
+    right
 }
 .text-grid {
   display: grid;
@@ -48,12 +49,13 @@ a.right{
     left: 0px;
     top: 0px;
     z-index: 101;
-    padding: 10px 73px;
+    padding: 10px 81px;
     background-color: rgb(39, 85, 53);
     color: rgb(0, 0, 0);
     border: none;
     cursor: pointer;
     border-radius: 4px;
+    text-decoration: none;
     
 }
 
@@ -79,4 +81,8 @@ a.right{
 }
 body{
   background-color: rgb(55, 125, 57);
+}
+a.menu-item {
+  left: 10;
+  padding: 10px;
 }
