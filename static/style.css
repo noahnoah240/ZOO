@@ -5,24 +5,11 @@ a.hover {
   text-decoration: none; /* remove underline */
   background-color: rgb(39, 85, 53); /* set background color */
   color: rgb(0, 0, 0); /* set text color */
-
 }
 
 a.hover:hover {
   transform: translateX(5px); /* move right */
 }
-a.right{
-    display: block;
-    margin-left:auto;
-    margin-right:0;
-    right
-}
-.text-grid {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 0px;
-}
-
 .grid-item {
   padding: 4px;
   border: 0px solid #000000;
@@ -55,14 +42,23 @@ a.right{
     border: none;
     cursor: pointer;
     border-radius: 4px;
-    text-decoration: none;
-    
+    text-decoration: none; 
 }
-
+#startknop {
+    padding-left: 0px;
+    top: 0px;
+    padding: 10px 81px;
+    background-color: rgb(39, 85, 53);
+    color: rgb(0, 0, 0);
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    text-decoration: none; 
+}
 .link {
     text-decoration: none;
     color: black;
-    background-color: rgb(39, 85, 53);
+    background-color: rgb(55, 125, 57);
     padding: 0px;
 }
 .side-menu {
@@ -82,7 +78,30 @@ a.right{
 body{
   background-color: rgb(55, 125, 57);
 }
-a.menu-item {
+.menu-item {
+  left: 10;
+  padding-top: 10px;
+  padding-bottom: 0px;  
+}
+.menu-item1 {
   left: 10;
   padding: 10px;
+  padding-top: 20px;
+}
+.side-menu2 {
+  position: fixed;
+  left: 0px;  
+  top: 0;
+  width: 180px;
+  height: 100vh;
+  background-color:  rgb(39, 85, 53);
+  transition: left 0.3s ease;
+  z-index: 100;
+}
+#dier-afbeelding {
+  float: right;
+  margin-left: 20px;
+   position: absolute;
+    top: 0;
+    right: 0;
 }

@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content -%}
+<a id="startknop" href="/Dieren">Terug</a>
+<h1 id="dier-naam"></h1>
+<img id="dier-afbeelding" src="/static/Dieren/{{ dier_afbeelding }}" alt="{{ dier_naam }}" width="200" height="200">
+
+
+
+<script>
+    const dier = window.location.pathname.split("/").filter(Boolean).pop();
+    document.getElementById("dier-naam").textContent = dier;
+    const afbeelding = document.getElementById("dier-afbeelding");
+    afbeelding.src = "/static/Dieren/" + dier + ".jpg";
+</script>
+{%- endblock -%}
