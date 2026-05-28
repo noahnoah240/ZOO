@@ -1,12 +1,11 @@
 {% extends "layout.html" %}
 {% block content -%}
-<a id="startknop" href="/Dieren">Terug</a>
-<h1 id="dier-naam"></h1>
-<img id="dier-afbeelding" src="/static/Dieren/{{ dier_afbeelding }}" alt="{{ dier_naam }}" width="200" height="200">
-
-
-
+<h1>{{ dier["naam"] }}</h1>
+<p><strong>Categorie:</strong> {{ dier["categorie"] }}</p>
+<p><strong>Beschrijving:</strong> {{ dier["beschrijving"] }}</p>
+<img id="dier-afbeelding" src="/static/Dieren/{{ dier['naam'] }}.jpg" alt="{{ dier['naam'] }}" style="width:350px; height:350px;">
 <script>
+    
     const dier = window.location.pathname.split("/").filter(Boolean).pop();
     document.getElementById("dier-naam").textContent = dier;
     const afbeelding = document.getElementById("dier-afbeelding");

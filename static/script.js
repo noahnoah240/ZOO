@@ -8,6 +8,5 @@ document.addEventListener("DOMContentLoaded", () => {
     grid.classList.toggle("visible");
   });
 });
-
 const vollePath = window.location.pathname; // neemt de route
 const laatste = vollePath.split("/").filter(Boolean).pop(); // neemt het laatste deel van de route

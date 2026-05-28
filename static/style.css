@@ -54,6 +54,7 @@ a.hover:hover {
     cursor: pointer;
     border-radius: 4px;
     text-decoration: none; 
+    position: fixed;
 }
 .link {
     text-decoration: none;
@@ -101,7 +102,14 @@ body{
 #dier-afbeelding {
   float: right;
   margin-left: 20px;
-   position: absolute;
+   position: fixed;
     top: 0;
     right: 0;
+}
+p {
+    max-width: 600px; /* Tekst stopt op 600px breed */
+}
+kaart{
+  position: fixed;
+  left: 50%;
 }
