@@ -1,14 +1,25 @@
 {% extends "layout.html" %}
 {% block content -%}
-<h1>{{ dier["naam"] }}</h1>
-<p><strong>Categorie:</strong> {{ dier["categorie"] }}</p>
-<p><strong>Beschrijving:</strong> {{ dier["beschrijving"] }}</p>
-<img id="dier-afbeelding" src="/static/Dieren/{{ dier['naam'] }}.jpg" alt="{{ dier['naam'] }}" style="width:350px; height:350px;">
-<script>
-    
-    const dier = window.location.pathname.split("/").filter(Boolean).pop();
-    document.getElementById("dier-naam").textContent = dier;
-    const afbeelding = document.getElementById("dier-afbeelding");
-    afbeelding.src = "/static/Dieren/" + dier + ".jpg";
-</script>
+
+<div class="dier-container">
+    <div class="dier-content">
+        <h1>{{ dier["naam"] }}</h1>
+        <p><strong>Categorie:</strong> {{ dier["categorie"] }}</p>
+        <p><strong>Beschrijving:</strong> {{ dier["beschrijving"] }}</p>
+        <img class="dier-foto" id="dier-afbeelding" src="/static/Dieren/{{ dier['naam'] }}.jpg" alt="{{ dier['naam'] }}" style="width:150px; height:150px;">
+        
+        {% if session.get('username') %}
+        <div class="favorite-section">
+            <button type="button" id="favorite-btn" class="favorite-btn {% if is_favorited %}favorited{% endif %}" data-dier-id="{{ dier['id'] }}">
+                <span class="favorite-icon">{% if is_favorited %}★{% else %}☆{% endif %}</span>
+                <span class="favorite-text">{% if is_favorited %}Favoriet{% else %}Als favoriet toevoegen{% endif %}</span>
+            </button>
+        </div>
+        {% else %}
+        <div class="favorite-section">
+            <p><a href="/login">Login om dit dier als favoriet te markeren</a></p>
+        </div>
+        {% endif %}
+    </div>
+</div>
 {%- endblock -%}

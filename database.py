@@ -52,6 +52,23 @@ cursor.execute("INSERT OR IGNORE INTO CATEGORIEEN (naam) VALUES ('Vogels')")
 cursor.execute("INSERT OR IGNORE INTO CATEGORIEEN (naam) VALUES ('Reptielen')")
 cursor.execute("INSERT OR IGNORE INTO CATEGORIEEN (naam) VALUES ('Aquariumdieren')")
 
+# Create users table
+cursor.execute("""CREATE TABLE IF NOT EXISTS USERS (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL
+)""")
+
+# Create favorites table with user_id foreign key
+cursor.execute("""CREATE TABLE IF NOT EXISTS FAVORIETEN (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    dier_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES USERS(id),
+    FOREIGN KEY (dier_id) REFERENCES DIEREN(id),
+    UNIQUE(user_id, dier_id)
+)""")
+
 cursor.execute("SELECT * FROM DIEREN JOIN CATEGORIEEN ON CATEGORIEEN.naam = DIEREN.categorie")
 variable.commit()
 variable.close()

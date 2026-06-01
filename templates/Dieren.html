@@ -1,11 +1,20 @@
 {% extends "layout.html" %}
 {% block content %}
-    <a id="startknop" href="/">Start</a>
-    <div class="menu-item">Katachtigen</div>
+
+
+<div class="dieren-grid">
+  {% for categorie in ["Katachtigen", "Mensapen", "Beren", "Kleine_Roofdieren", "Zeedieren", "Hoefdieren", "Vogels", "Reptielen", "Aquariumdieren"] %}
+  <div class="categorie-card">
+    <h3>{{ categorie }}</h3>
     <ul>
-        
-    {% for dier in dieren %}
-    <li><a class="link" href="/dier/{{ dier.naam }}">{{ dier.naam }}</a></li>
-{% endfor %}
-</ul>
+      {% for dier in dieren %}
+        {% if dier.categorie == categorie %}
+          <li><a class="link" href="/dier/{{ dier.naam }}">{{ dier.naam }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+</div>
+
 {% endblock %}
