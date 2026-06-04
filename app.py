@@ -10,7 +10,16 @@ db = SQL("sqlite:///database.db") #maakt verbinding met de database
 
 def initialize_database(): #maakt tabellen voor gebruikers
     db.execute("CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL)")
-    
+    db.execute("""CREATE TABLE IF NOT EXISTS REVIEWS (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        dier_id INTEGER NOT NULL,
+        review TEXT NOT NULL,
+        created_at TEXT NOT NULL DEFAULT (datetime('now')),
+        FOREIGN KEY (user_id) REFERENCES USERS(id),
+        FOREIGN KEY (dier_id) REFERENCES DIEREN(id),
+        UNIQUE(user_id, dier_id)
+    )""")
 
 initialize_database()
 
@@ -30,13 +39,67 @@ def kaart():
     dieren = db.execute("SELECT * FROM DIEREN")
     return render_template("kaart.html", dieren=dieren)
 
-@app.route("/dier/<naam>")
+@app.route("/dier/<naam>", methods=["GET", "POST"])
 def dierpagina(naam):
     resultaat = db.execute("SELECT * FROM DIEREN WHERE naam = ?", naam)
     if len(resultaat) == 0:
         return "Dier niet gevonden", 404
-       
-    return render_template("dierpagina.html", dier=resultaat[0])
+
+    dier = resultaat[0]
+    error = None
+
+    if request.method == "POST":
+        if "user_id" not in session:
+            return redirect("/login")
+
+        review_text = request.form.get("review")
+        if not review_text or not review_text.strip():
+            error = "Review is verplicht"
+        else:
+            review_text = review_text.strip()
+            existing = db.execute(
+                "SELECT * FROM REVIEWS WHERE user_id = ? AND dier_id = ?",
+                session["user_id"], dier["id"]
+            )
+            if len(existing) > 0:
+                db.execute(
+                    "UPDATE REVIEWS SET review = ?, created_at = datetime('now') WHERE user_id = ? AND dier_id = ?",
+                    review_text, session["user_id"], dier["id"]
+                )
+            else:
+                db.execute(
+                    "INSERT INTO REVIEWS (user_id, dier_id, review) VALUES (?, ?, ?)",
+                    session["user_id"], dier["id"], review_text
+                )
+            return redirect(f"/dier/{naam}")
+
+    reviews = db.execute(
+        "SELECT REVIEWS.id, REVIEWS.review, REVIEWS.created_at, REVIEWS.user_id, USERS.username FROM REVIEWS JOIN USERS ON REVIEWS.user_id = USERS.id WHERE REVIEWS.dier_id = ? ORDER BY REVIEWS.created_at DESC",
+        dier["id"]
+    )
+
+    return render_template("dierpagina.html", dier=dier, reviews=reviews, error=error)
+
+@app.route("/dier/<naam>/review/delete", methods=["POST"])
+def delete_review(naam):
+    if "user_id" not in session:
+        return redirect("/login")
+
+    review_id = request.form.get("review_id")
+    if not review_id:
+        return redirect(f"/dier/{naam}")
+
+    try:
+        review_id = int(review_id)
+    except ValueError:
+        return redirect(f"/dier/{naam}")
+
+    review = db.execute("SELECT * FROM REVIEWS WHERE id = ?", review_id)
+    if len(review) == 0 or review[0]["user_id"] != session["user_id"]:
+        return redirect(f"/dier/{naam}")
+
+    db.execute("DELETE FROM REVIEWS WHERE id = ?", review_id)
+    return redirect(f"/dier/{naam}")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():

@@ -1,3 +1,15 @@
+.social-link {
+  text-decoration: none;
+    color: rgb(46, 51, 51);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+.insta-link:hover {
+    color: rgb(255, 83, 249);
+}
+.facebook-link:hover {
+    color: rgb(59, 89, 152);
+}
 .link {
     text-decoration: none;
     color: rgb(39, 85, 53);
@@ -287,10 +299,95 @@ body {
 .favorite-section a:hover {
   background-color: rgb(29, 65, 43);
 }
+
+.reviews-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.review-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.review-item {
+  padding: 1rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.review-item:last-child {
+  border-bottom: none;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.review-date {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.review-form-container textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  resize: vertical;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.review-form-container button {
+  padding: 0.75rem 1.5rem;
+  background-color: rgb(39, 85, 53);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.review-form-container button:hover {
+  background-color: rgb(29, 65, 43);
+}
+
+.review-delete-form {
+  margin-top: 0.75rem;
+}
+
+.delete-review-button {
+  padding: 0.5rem 1rem;
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.delete-review-button:hover {
+  background-color: #c9302c;
+}
+
+.error {
+  color: #d9534f;
+  margin-bottom: 1rem;
+}
+
 .dier-foto {
   position: fixed;
-  top: 135px;
-  left: 955px;
+  top: 15%;
+  left: 65.3%;
 }
 .kaart{
   position: fixed;

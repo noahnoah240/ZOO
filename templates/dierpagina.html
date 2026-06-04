@@ -6,7 +6,50 @@
         <h1>{{ dier["naam"] }}</h1>
         <p><strong>Categorie:</strong> {{ dier["categorie"] }}</p>
         <p><strong>Beschrijving:</strong> {{ dier["beschrijving"] }}</p>
+        <p><strong>Status:</strong> {{ dier["status"] }}</p>
+        <p><strong>Leefgebied:</strong> {{ dier["leefgebied"] }}</p>
+        <p><strong>Kenmerken:</strong> {{ dier["kenmerken"] }}</p>
         <img class="dier-foto" id="dier-afbeelding" src="/static/Dieren/{{ dier['naam'] }}.jpg" alt="{{ dier['naam'] }}" style="width:150px; height:150px;">
+
+        <section class="reviews-section">
+            <h2>Reviews</h2>
+            {% if reviews and reviews | length > 0 %}
+                <ul class="r    eview-list">
+                    {% for review in reviews %}
+                        <li class="review-item">
+                            <div class="review-header">
+                                <strong>{{ review.username }}</strong>
+                                <span class="review-date">{{ review.created_at }}</span>
+                            </div>
+                            <p>{{ review.review }}</p>
+                            {% if session.get('user_id') == review.user_id %}
+                                <form method="post" action="/dier/{{ dier['naam'] }}/review/delete" class="review-delete-form">
+                                    <input type="hidden" name="review_id" value="{{ review.id }}">
+                                    <button type="submit" class="delete-review-button">Verwijder review</button>
+                                </form>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Er zijn nog geen reviews voor dit dier.</p>
+            {% endif %}
+
+            <div class="review-form-container">
+                {% if session.get('user_id') %}
+                    <h3>Laat een review achter</h3>
+                    {% if error %}
+                        <p class="error">{{ error }}</p>
+                    {% endif %}
+                    <form method="post">
+                        <textarea name="review" rows="4" placeholder="Schrijf je review hier..." required></textarea>
+                        <button type="submit">Plaats review</button>
+                    </form>
+                {% else %}
+                    <p><a href="/login">Log in</a> om een review te plaatsen.</p>
+                {% endif %}
             </div>
+        </section>
+    </div>
 </div>
 {%- endblock -%}
