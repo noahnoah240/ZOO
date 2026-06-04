@@ -12,7 +12,7 @@
         <img class="dier-foto" id="dier-afbeelding" src="/static/Dieren/{{ dier['naam'] }}.jpg" alt="{{ dier['naam'] }}" style="width:150px; height:150px;">
 
         <section class="reviews-section">
-            <h2>Reviews</h2>
+            <h2>Reviews (1 per gebruiker)</h2>
             {% if reviews and reviews | length > 0 %}
                 <ul class="r    eview-list">
                     {% for review in reviews %}
