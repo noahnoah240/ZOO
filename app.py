@@ -6,7 +6,6 @@ import os
 app = Flask(__name__) #maak variable "app" aan
 app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production' 
 db = SQL("sqlite:///database.db") #maakt verbinding met de database
-db.execute("PRAGMA foreign_keys = ON") #enable foreign key constraints
 
 
 def initialize_database(): #maakt tabellen voor gebruikers
@@ -16,7 +15,7 @@ def initialize_database(): #maakt tabellen voor gebruikers
         user_id INTEGER NOT NULL,
         dier_id INTEGER NOT NULL,
         review TEXT NOT NULL,
-        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        created_at TEXT NOT NULL DEFAULT (datetime('now')),
         FOREIGN KEY (user_id) REFERENCES USERS(id),
         FOREIGN KEY (dier_id) REFERENCES DIEREN(id),
         UNIQUE(user_id, dier_id)
@@ -69,7 +68,7 @@ def dierpagina(naam):
                 )
             else:
                 db.execute(
-                    "INSERT INTO REVIEWS (user_id, dier_id, review, created_at) VALUES (?, ?, ?, datetime('now'))",
+                    "INSERT INTO REVIEWS (user_id, dier_id, review) VALUES (?, ?, ?)",
                     session["user_id"], dier["id"], review_text
                 )
             return redirect(f"/dier/{naam}")
