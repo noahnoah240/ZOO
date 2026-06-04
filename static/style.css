@@ -15,7 +15,7 @@ body {
 
 .dieren-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
   padding: 1rem 0;
 }
@@ -59,6 +59,7 @@ body {
   padding: 1rem 0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   margin-bottom: 2rem;
+  
 }
 
 .nav-container {
@@ -288,6 +289,164 @@ body {
 }
 .dier-foto {
   position: fixed;
-  top: 140px;
-  left: 1255px;
+  top: 135px;
+  left: 955px;
+}
+.kaart{
+  position: fixed;
+  top: 10%;
+}
+.onzichtbaar {
+  opacity: 1;
+}
+.leeuw {
+  position: fixed;
+  top: 44%;
+  left: 42%;
+}
+.armoertijger {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+  
+}
+.jaguar {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.armoerluipaard {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.gorilla {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.chimpansee {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.uilenkopmeerkat {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.brilbeer {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.rode_Panda {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.stokstaartje {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.neusbeer {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.vosmangoest {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.wasbeer {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.californische_zeeleeuw {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.gewone_zeehond {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.giraffe {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.okapi {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.kaapse_buffel {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.anoa {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.nijlpaard {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.olifant {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.pinguïn {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.afrikaanse_vogelsoorten {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.krokodil {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.alligator {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.slangen {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.hagedis {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.tripsche_rifvissen {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.koralen {
+  position: fixed;
+  top: 335px;
+  left: 555px;
+}
+.zoet-en-zoutwatervissen {
+  position: fixed;
+  top: 335px;
+  left: 555px;
 }

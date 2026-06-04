@@ -1,24 +1,22 @@
 from cs50 import SQL
-from flask import Flask, render_template, request, redirect, session, jsonify
-from werkzeug.security import check_password_hash, generate_password_hash
+from flask import Flask, render_template, request, redirect, session, jsonify 
+from werkzeug.security import check_password_hash, generate_password_hash #Zorgt ervoor dat wachtwoorden niet leesbaar zijn in de database.
 import os
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'
-db = SQL("sqlite:///database.db")
+app = Flask(__name__) #maak variable "app" aan
+app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production' 
+db = SQL("sqlite:///database.db") #maakt verbinding met de database
 
 
-def initialize_database():
+def initialize_database(): #maakt tabellen voor gebruikers
     db.execute("CREATE TABLE IF NOT EXISTS USERS (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL)")
-    db.execute(
-        "CREATE TABLE IF NOT EXISTS FAVORIETEN (id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL, dier_id INTEGER NOT NULL, FOREIGN KEY (user_id) REFERENCES USERS(id), FOREIGN KEY (dier_id) REFERENCES DIEREN(id), UNIQUE(user_id, dier_id))"
-    )
+    
 
 initialize_database()
 
-@app.route("/")
+@app.route("/") #startpagina
 def index():
-    dieren = db.execute("SELECT * FROM DIEREN")
+    dieren = db.execute("SELECT * FROM DIEREN") 
     categorieen = db.execute("SELECT * FROM CATEGORIEEN")
     return render_template("index.html", categorieen=categorieen, dieren=dieren)
 @app.route("/Dieren")
@@ -29,25 +27,16 @@ def dieren():
     return render_template("Dieren.html", categorieen=categorieen, dieren=dieren)
 @app.route("/Kaart")
 def kaart():
-    return render_template("kaart.html")
+    dieren = db.execute("SELECT * FROM DIEREN")
+    return render_template("kaart.html", dieren=dieren)
 
 @app.route("/dier/<naam>")
 def dierpagina(naam):
     resultaat = db.execute("SELECT * FROM DIEREN WHERE naam = ?", naam)
     if len(resultaat) == 0:
         return "Dier niet gevonden", 404
-    
-    # Check if user is logged in and has favorited this animal
-    is_favorited = False
-    if 'user_id' in session:
-        dier_id = resultaat[0]['id']
-        favorite = db.execute(
-            "SELECT * FROM FAVORIETEN WHERE user_id = ? AND dier_id = ?",
-            session['user_id'], dier_id
-        )
-        is_favorited = len(favorite) > 0
-    
-    return render_template("dierpagina.html", dier=resultaat[0], is_favorited=is_favorited)
+       
+    return render_template("dierpagina.html", dier=resultaat[0])
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
