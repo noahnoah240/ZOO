@@ -67,7 +67,9 @@ def admin():
         "ORDER BY USERS.username ASC, PARK_REVIEWS.created_at DESC"
     )
 
-    return render_template("admin.html", animal_reviews=animal_reviews, park_reviews=park_reviews)
+    users = db.execute("SELECT id, username FROM USERS ORDER BY username ASC")
+
+    return render_template("admin.html", animal_reviews=animal_reviews, park_reviews=park_reviews, users=users)
 
 @app.route("/reviews", methods=["GET", "POST"])
 def reviews():
@@ -236,6 +238,32 @@ def register():
         return redirect("/login")
     
     return render_template("register.html")
+
+
+@app.route("/admin/delete_user", methods=["POST"])
+def admin_delete_user():
+    if session.get('username') != 'Noah.M' or 'user_id' not in session:
+        return redirect('/login')
+
+    user_id = request.form.get('user_id')
+    if not user_id:
+        return redirect('/admin')
+
+    try:
+        user_id = int(user_id)
+    except ValueError:
+        return redirect('/admin')
+
+    # Prevent admin from deleting their own account
+    if user_id == session.get('user_id'):
+        return redirect('/admin')
+
+    # Remove user's reviews first, then the user
+    db.execute("DELETE FROM REVIEWS WHERE user_id = ?", user_id)
+    db.execute("DELETE FROM PARK_REVIEWS WHERE user_id = ?", user_id)
+    db.execute("DELETE FROM USERS WHERE id = ?", user_id)
+
+    return redirect('/admin')
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

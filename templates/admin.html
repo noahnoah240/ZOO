@@ -1,53 +1,88 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1>Admin Panel</h1>
-    <p>Welcome to the admin panel, <strong>{{ session.username }}</strong>.</p>
+    <div class="dier-container">
+        <div class="dier-content">
+            <h1>Admin Paneel</h1>
+            <p>Welcome bij het Admin Paneel, <strong>{{ session.username }}</strong>.</p>
 
-    <section class="admin-section">
-        <h2>Algemene parkreviews</h2>
-        {% if park_reviews and park_reviews | length > 0 %}
-            <ul class="review-list">
-                {% for review in park_reviews %}
-                    <li class="review-item">
-                        <div class="review-header">
-                            <strong>{{ review.username }}</strong>
-                            <span class="review-date">{{ review.created_at }}</span>
-                        </div>
-                        <p><strong>Bron:</strong> Algemene parkreview</p>
-                        <p>{{ review.review }}</p>
-                        <form method="post" action="/reviews/park/delete" class="review-delete-form">
-                            <input type="hidden" name="review_id" value="{{ review.review_id }}">
-                            <button type="submit" class="delete-review-button">Verwijder review</button>
-                        </form>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>Er zijn nog geen parkreviews.</p>
-        {% endif %}
-    </section>
+            <div class="admin-columns" style="display:flex; gap:24px; align-items:flex-start;">
+                <!-- Left: reviews (flex:2) -->
+                <div class="admin-left" style="flex:2; background:#fff; padding:18px; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+                    <section class="admin-section">
+                        <h2>Algemene parkreviews</h2>
+                        {% if park_reviews and park_reviews | length > 0 %}
+                            <ul class="review-list">
+                                {% for review in park_reviews %}
+                                    <li class="review-item">
+                                        <div class="review-header">
+                                            <strong>{{ review.username }}</strong>
+                                            <span class="review-date">{{ review.created_at }}</span>
+                                        </div>
+                                        <p><strong>Bron:</strong> Algemene parkreview</p>
+                                        <p>{{ review.review }}</p>
+                                        <form method="post" action="/reviews/park/delete" class="review-delete-form">
+                                            <input type="hidden" name="review_id" value="{{ review.review_id }}">
+                                            <button type="submit" class="delete-review-button">Verwijder review</button>
+                                        </form>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>Er zijn nog geen parkreviews.</p>
+                        {% endif %}
+                    </section>
 
-    <section class="admin-section">
-        <h2>Reviews over dieren</h2>
-        {% if animal_reviews and animal_reviews | length > 0 %}
-            <ul class="review-list">
-                {% for review in animal_reviews %}
-                    <li class="review-item">
-                        <div class="review-header">
-                            <strong>{{ review.username }}</strong>
-                            <span class="review-date">{{ review.created_at }}</span>
-                        </div>
-                        <p><strong>Bron:</strong> Review over <strong>{{ review.dier_naam }}</strong></p>
-                        <p>{{ review.review }}</p>
-                        <form method="post" action="/reviews/animal/delete" class="review-delete-form">
-                            <input type="hidden" name="review_id" value="{{ review.review_id }}">
-                            <button type="submit" class="delete-review-button">Verwijder review</button>
-                        </form>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>Er zijn nog geen dierreviews.</p>
-        {% endif %}
-    </section>
+                    <section class="admin-section" style="margin-top:18px;">
+                        <h2>Reviews over dieren</h2>
+                        {% if animal_reviews and animal_reviews | length > 0 %}
+                            <ul class="review-list">
+                                {% for review in animal_reviews %}
+                                    <li class="review-item">
+                                        <div class="review-header">
+                                            <strong>{{ review.username }}</strong>
+                                            <span class="review-date">{{ review.created_at }}</span>
+                                        </div>
+                                        <p><strong>Bron:</strong> Review over <strong>{{ review.dier_naam }}</strong></p>
+                                        <p>{{ review.review }}</p>
+                                        <form method="post" action="/reviews/animal/delete" class="review-delete-form">
+                                            <input type="hidden" name="review_id" value="{{ review.review_id }}">
+                                            <button type="submit" class="delete-review-button">Verwijder review</button>
+                                        </form>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>Er zijn nog geen dierreviews.</p>
+                        {% endif %}
+                    </section>
+                </div>
+
+                <!-- Right: users (fixed width) -->
+                <div class="admin-right" style="width:360px; background:#fff; padding:18px; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+                    <h2>Gebruikers</h2>
+                    {% if users and users | length > 0 %}
+                        <ul class="user-list" style="list-style:none; padding:0; margin:0;">
+                            {% for user in users %}
+                                <li class="user-item" style="padding:8px 0; border-bottom:1px solid #f0f0f0;">
+                                    <div class="user-row" style="display:flex; align-items:center; justify-content:space-between;">
+                                        <strong>{{ user.username }}</strong>
+                                        {% if session.get('user_id') != user.id %}
+                                            <form method="post" action="/admin/delete_user" style="display:inline-block; margin-left:10px;">
+                                                <input type="hidden" name="user_id" value="{{ user.id }}">
+                                                <button type="submit" class="delete-review-button" style="background:#c0392b;">Verwijder account</button>
+                                            </form>
+                                        {% else %}
+                                            <span style="margin-left:10px; color:gray;">(Jij)</span>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Geen geregistreerde gebruikers gevonden.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
