@@ -211,6 +211,48 @@ def delete_animal_review():
     db.execute("DELETE FROM REVIEWS WHERE id = ?", review_id)
     return redirect("/reviews")
 
+
+@app.route('/review/<int:review_id>/edit', methods=['GET', 'POST'])
+def edit_review(review_id):
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    # Try to find in REVIEWS
+    rows = db.execute('SELECT REVIEWS.id, REVIEWS.review, REVIEWS.user_id, REVIEWS.dier_id, DIEREN.naam AS dier_naam FROM REVIEWS JOIN DIEREN ON REVIEWS.dier_id = DIEREN.id WHERE REVIEWS.id = ?', review_id)
+    if len(rows) == 1:
+        review = rows[0]
+        table = 'reviews'
+        redirect_url = f"/dier/{review['dier_naam']}"
+    else:
+        # Try park reviews
+        rows = db.execute('SELECT id, review, user_id FROM PARK_REVIEWS WHERE id = ?', review_id)
+        if len(rows) == 1:
+            review = rows[0]
+            table = 'park'
+            redirect_url = '/reviews'
+        else:
+            return redirect('/')
+
+    # Only owner can edit
+    if review['user_id'] != session['user_id']:
+        return redirect(redirect_url)
+
+    if request.method == 'POST':
+        new_text = request.form.get('review')
+        if not new_text or not new_text.strip():
+            error = 'Review mag niet leeg zijn'
+            return render_template('edit_review.html', review=review, table=table, error=error)
+
+        new_text = new_text.strip()
+        if table == 'reviews':
+            db.execute('UPDATE REVIEWS SET review = ?, created_at = datetime(\'now\') WHERE id = ?', new_text, review_id)
+        else:
+            db.execute('UPDATE PARK_REVIEWS SET review = ?, created_at = datetime(\'now\') WHERE id = ?', new_text, review_id)
+
+        return redirect(redirect_url)
+
+    return render_template('edit_review.html', review=review, table=table)
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -282,10 +324,55 @@ def login():
         # Store user in session
         session["user_id"] = users[0]["id"]
         session["username"] = users[0]["username"]
+        session['is_admin'] = users[0].get('is_admin', 0)
         
         return redirect("/")
     
     return render_template("login.html")
+
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    if 'user_id' not in session:
+        return redirect('/login')
+
+    error = None
+    success = None
+
+    if request.method == 'POST':
+        new_username = request.form.get('new_username')
+        current_password = request.form.get('current_password')
+        new_password = request.form.get('new_password')
+        confirm_password = request.form.get('confirm_password')
+
+        # Change username
+        if new_username and new_username.strip() and new_username != session.get('username'):
+            existing = db.execute('SELECT * FROM USERS WHERE username = ?', new_username)
+            if len(existing) > 0:
+                error = 'Gebruikersnaam bestaat al'
+                return render_template('profile.html', error=error)
+            db.execute('UPDATE USERS SET username = ? WHERE id = ?', new_username, session['user_id'])
+            session['username'] = new_username
+            success = 'Gebruikersnaam bijgewerkt'
+
+        # Change password
+        if new_password:
+            if not current_password:
+                error = 'Voer huidig wachtwoord in om te veranderen'
+                return render_template('profile.html', error=error, success=success)
+            users = db.execute('SELECT * FROM USERS WHERE id = ?', session['user_id'])
+            if len(users) != 1 or not check_password_hash(users[0]['password'], current_password):
+                error = 'Huidig wachtwoord onjuist'
+                return render_template('profile.html', error=error)
+            if new_password != confirm_password:
+                error = 'Nieuw wachtwoord komt niet overeen'
+                return render_template('profile.html', error=error)
+            hashed = generate_password_hash(new_password)
+            db.execute('UPDATE USERS SET password = ? WHERE id = ?', hashed, session['user_id'])
+            success = (success + ' ' if success else '') + 'Wachtwoord bijgewerkt'
+
+        return render_template('profile.html', success=success)
+
+    return render_template('profile.html')
 
 @app.route("/logout")
 def logout():

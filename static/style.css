@@ -409,6 +409,14 @@ body {
   background-color: #c9302c;
 }
 
+.delete-review-button.delete-user {
+  background: #c0392b;
+}
+
+.delete-review-button.delete-user:hover {
+  background: #a93226;
+}
+
 .error {
   color: #d9534f;
   margin-bottom: 1rem;
@@ -422,4 +430,181 @@ body {
 .kaart{
   position: absolute;
   top: 10%;
+}
+
+/* Admin panel styles */
+.admin-columns {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.admin-left {
+  flex: 2;
+  background: #fff;
+  padding: 18px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.admin-right {
+  width: 360px;
+  background: #fff;
+  padding: 18px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.admin-section:not(:first-child) {
+  margin-top: 18px;
+}
+
+.user-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.delete-user-form {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.user-self {
+  margin-left: 10px;
+  color: #999;
+}
+
+/* Alert styles */
+.alert-error {
+  background: #fee;
+  color: #c33;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  border-left: 4px solid #c33;
+}
+
+.alert-success {
+  background: #efe;
+  color: #3c3;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  border-left: 4px solid #3c3;
+}
+
+/* Profile form styles */
+.profile-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.profile-section {
+  background: #fff;
+  padding: 18px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.profile-section h2 {
+  margin-top: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.profile-form-group {
+  margin-bottom: 12px;
+}
+
+.profile-form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+.profile-form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.profile-form-hint {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+}
+
+.profile-button-row {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.btn-save {
+  background: #2ecc71;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-save:hover {
+  background: #27ae60;
+}
+
+.btn-cancel {
+  display: inline-flex;
+  align-items: center;
+  background: #ddd;
+  color: #333;
+  padding: 10px 24px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cancel:hover {
+  background: #ccc;
+}
+
+/* Edit review styles */
+.edit-review-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.edit-review-cancel {
+  margin-left: 0;
+}
+
+/* Image thumbnail */
+.dier-thumbnail {
+  width: 150px;
+  height: 150px;
 }

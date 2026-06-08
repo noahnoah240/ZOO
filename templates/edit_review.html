@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="dier-container">
+    <div class="dier-content">
+      <h1>Bewerk review</h1>
+      {% if error %}
+        <p class="error">{{ error }}</p>
+      {% endif %}
+      <form method="post">
+        <textarea name="review" rows="6" required>{{ review.review }}</textarea>
+        <div class="edit-review-actions">
+          <button type="submit">Opslaan</button>
+          <a href="{% if table == 'reviews' %}/dier/{{ review.dier_naam }}{% else %}/reviews{% endif %}" class="edit-review-cancel">Annuleer</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -19,7 +19,7 @@
                     <a href="/admin" class="nav-admin">Admin</a>
                 {% endif %}
                 {% if session.get('username') %}
-                    <span class="user-welcome">Welkom, {{ session['username'] }}!</span>
+                    <a href="/profile" class="user-welcome">Welkom, {{ session['username'] }}!</a>
                     <a href="/logout" class="nav-logout">Logout</a>
                 {% else %}
                     <a href="/login">Login</a>

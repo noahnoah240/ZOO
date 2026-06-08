@@ -9,7 +9,7 @@
         <p><strong>Status:</strong> {{ dier["status"] }}</p>
         <p><strong>Leefgebied:</strong> {{ dier["leefgebied"] }}</p>
         <p><strong>Kenmerken:</strong> {{ dier["kenmerken"] }}</p>
-        <img class="dier-foto" id="dier-afbeelding" src="/static/Dieren/{{ dier['naam'] }}.jpg" alt="{{ dier['naam'] }}" style="width:150px; height:150px;">
+        <img class="dier-foto dier-thumbnail" id="dier-afbeelding" src="/static/Dieren/{{ dier['naam'] }}.jpg" alt="{{ dier['naam'] }}">
 
         <section class="reviews-section">
             <h2>Reviews (1 per gebruiker)</h2>
@@ -27,6 +27,7 @@
                                     <input type="hidden" name="review_id" value="{{ review.id }}">
                                     <button type="submit" class="delete-review-button">Verwijder review</button>
                                 </form>
+                                <a href="/review/{{ review.id }}/edit" class="edit-review-link">Bewerk review</a>
                             {% endif %}
                         </li>
                     {% endfor %}

@@ -24,6 +24,7 @@
                                     <input type="hidden" name="review_id" value="{{ review.review_id }}">
                                     <button type="submit" class="delete-review-button">Verwijder review</button>
                                 </form>
+                                <a href="/review/{{ review.review_id }}/edit" class="edit-review-link">Bewerk review</a>
                             {% endif %}
                         </li>
                     {% endfor %}

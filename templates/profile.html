@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="dier-container">
+    <div class="dier-content">
+      <h1>Mijn Profiel</h1>
+
+      {% if error %}
+        <div class="alert-error">{{ error }}</div>
+      {% endif %}
+      {% if success %}
+        <div class="alert-success">{{ success }}</div>
+      {% endif %}
+
+      <form method="post" class="profile-form">
+        <!-- Username Section -->
+        <div class="profile-section">
+          <h2>Gebruikersnaam wijzigen</h2>
+          <div class="profile-form-group">
+            <label>Nieuwe gebruikersnaam</label>
+            <input type="text" name="new_username" value="{{ session.username }}" required>
+          </div>
+          <p class="profile-form-hint">Voer je nieuwe gebruikersnaam in</p>
+        </div>
+
+        <!-- Password Section -->
+        <div class="profile-section">
+          <h2>Wachtwoord wijzigen</h2>
+          <div class="profile-form-group">
+            <label>Huidig wachtwoord</label>
+            <input type="password" name="current_password">
+          </div>
+          <div class="profile-form-group">
+            <label>Nieuw wachtwoord</label>
+            <input type="password" name="new_password">
+          </div>
+          <div class="profile-form-group">
+            <label>Bevestig nieuw wachtwoord</label>
+            <input type="password" name="confirm_password">
+          </div>
+          <p class="profile-form-hint">Laat leeg om niet te wijzigen</p>
+        </div>
+
+        <!-- Submit Button (full width below) -->
+        <div class="profile-button-row">
+          <button type="submit" class="btn-save">Opslaan</button>
+          <a href="/" class="btn-cancel">Annuleren</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
