@@ -15,6 +15,9 @@
                 <a href="/Dieren">Dieren</a>
                 <a href="/Kaart">Kaart</a>
                 <a href="/reviews">Reviews</a>
+                {% if session.get('username') == 'Noah.M' %}
+                    <a href="/admin" class="nav-admin">Admin</a>
+                {% endif %}
                 {% if session.get('username') %}
                     <span class="user-welcome">Welkom, {{ session['username'] }}!</span>
                     <a href="/logout" class="nav-logout">Logout</a>
@@ -22,6 +25,7 @@
                     <a href="/login">Login</a>
                     <a href="/register">Register</a>
                 {% endif %}
+
             </div>
         </div>
     </nav>

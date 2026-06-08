@@ -45,7 +45,29 @@ def dieren():
 @app.route("/Kaart")
 def kaart():
     dieren = db.execute("SELECT * FROM DIEREN")
-    return render_template("kaart.html", dieren=dieren)
+    return render_template("Kaart.html", dieren=dieren)
+
+@app.route("/admin")
+def admin():
+    if session.get('username') != 'Noah.M':
+        return redirect("/login")
+
+    animal_reviews = db.execute(
+        "SELECT REVIEWS.id AS review_id, REVIEWS.review, REVIEWS.created_at, USERS.username, DIEREN.naam AS dier_naam "
+        "FROM REVIEWS "
+        "JOIN USERS ON REVIEWS.user_id = USERS.id "
+        "JOIN DIEREN ON REVIEWS.dier_id = DIEREN.id "
+        "ORDER BY USERS.username ASC, REVIEWS.created_at DESC"
+    )
+
+    park_reviews = db.execute(
+        "SELECT PARK_REVIEWS.id AS review_id, PARK_REVIEWS.review, PARK_REVIEWS.created_at, USERS.username "
+        "FROM PARK_REVIEWS "
+        "JOIN USERS ON PARK_REVIEWS.user_id = USERS.id "
+        "ORDER BY USERS.username ASC, PARK_REVIEWS.created_at DESC"
+    )
+
+    return render_template("admin.html", animal_reviews=animal_reviews, park_reviews=park_reviews)
 
 @app.route("/reviews", methods=["GET", "POST"])
 def reviews():
@@ -139,7 +161,7 @@ def delete_review(naam):
         return redirect(f"/dier/{naam}")
 
     review = db.execute("SELECT * FROM REVIEWS WHERE id = ?", review_id)
-    if len(review) == 0 or review[0]["user_id"] != session["user_id"]:
+    if len(review) == 0 or (review[0]["user_id"] != session["user_id"] and session.get('username') != 'Noah.M'):
         return redirect(f"/dier/{naam}")
 
     db.execute("DELETE FROM REVIEWS WHERE id = ?", review_id)
@@ -160,7 +182,7 @@ def delete_park_review():
         return redirect("/reviews")
 
     review = db.execute("SELECT * FROM PARK_REVIEWS WHERE id = ?", review_id)
-    if len(review) == 0 or review[0]["user_id"] != session["user_id"]:
+    if len(review) == 0 or (review[0]["user_id"] != session["user_id"] and session.get('username') != 'Noah.M'):
         return redirect("/reviews")
 
     db.execute("DELETE FROM PARK_REVIEWS WHERE id = ?", review_id)
@@ -181,7 +203,7 @@ def delete_animal_review():
         return redirect("/reviews")
 
     review = db.execute("SELECT * FROM REVIEWS WHERE id = ?", review_id)
-    if len(review) == 0 or review[0]["user_id"] != session["user_id"]:
+    if len(review) == 0 or (review[0]["user_id"] != session["user_id"] and session.get('username') != 'Noah.M'):
         return redirect("/reviews")
 
     db.execute("DELETE FROM REVIEWS WHERE id = ?", review_id)

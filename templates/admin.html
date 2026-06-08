@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Admin Panel</h1>
+    <p>Welcome to the admin panel, <strong>{{ session.username }}</strong>.</p>
+
+    <section class="admin-section">
+        <h2>Algemene parkreviews</h2>
+        {% if park_reviews and park_reviews | length > 0 %}
+            <ul class="review-list">
+                {% for review in park_reviews %}
+                    <li class="review-item">
+                        <div class="review-header">
+                            <strong>{{ review.username }}</strong>
+                            <span class="review-date">{{ review.created_at }}</span>
+                        </div>
+                        <p><strong>Bron:</strong> Algemene parkreview</p>
+                        <p>{{ review.review }}</p>
+                        <form method="post" action="/reviews/park/delete" class="review-delete-form">
+                            <input type="hidden" name="review_id" value="{{ review.review_id }}">
+                            <button type="submit" class="delete-review-button">Verwijder review</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Er zijn nog geen parkreviews.</p>
+        {% endif %}
+    </section>
+
+    <section class="admin-section">
+        <h2>Reviews over dieren</h2>
+        {% if animal_reviews and animal_reviews | length > 0 %}
+            <ul class="review-list">
+                {% for review in animal_reviews %}
+                    <li class="review-item">
+                        <div class="review-header">
+                            <strong>{{ review.username }}</strong>
+                            <span class="review-date">{{ review.created_at }}</span>
+                        </div>
+                        <p><strong>Bron:</strong> Review over <strong>{{ review.dier_naam }}</strong></p>
+                        <p>{{ review.review }}</p>
+                        <form method="post" action="/reviews/animal/delete" class="review-delete-form">
+                            <input type="hidden" name="review_id" value="{{ review.review_id }}">
+                            <button type="submit" class="delete-review-button">Verwijder review</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Er zijn nog geen dierreviews.</p>
+        {% endif %}
+    </section>
+{% endblock %}
