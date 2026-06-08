@@ -1,11 +1,4 @@
 {% extends "layout.html" %}
 {% block content %}
     <img class="kaart" src="/static/kaart_zoo.png" alt="Zoo Map" style="height: 80%; width: auto;">
-    {% for dier in dieren %}
-        <div class="dier-info">
-            <a href="/dier/{{ dier.naam }}">
-                <img  class="{{dier}} onzichtbaar" src="/static/Dieren/{{dier.naam}}.jpg" alt="{{dier.naam}}" style="width:30px; height:auto;">
-            </a>
-        </div>
-    {% endfor %}
 {% endblock %}

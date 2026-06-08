@@ -6,6 +6,7 @@ import os
 app = Flask(__name__) #maak variable "app" aan
 app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production' 
 db = SQL("sqlite:///database.db") #maakt verbinding met de database
+db.execute("PRAGMA foreign_keys = ON")
 
 
 def initialize_database(): #maakt tabellen voor gebruikers
@@ -15,10 +16,17 @@ def initialize_database(): #maakt tabellen voor gebruikers
         user_id INTEGER NOT NULL,
         dier_id INTEGER NOT NULL,
         review TEXT NOT NULL,
-        created_at TEXT NOT NULL DEFAULT (datetime('now')),
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES USERS(id),
         FOREIGN KEY (dier_id) REFERENCES DIEREN(id),
         UNIQUE(user_id, dier_id)
+    )""")
+    db.execute("""CREATE TABLE IF NOT EXISTS PARK_REVIEWS (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        review TEXT NOT NULL,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES USERS(id)
     )""")
 
 initialize_database()
@@ -38,6 +46,42 @@ def dieren():
 def kaart():
     dieren = db.execute("SELECT * FROM DIEREN")
     return render_template("kaart.html", dieren=dieren)
+
+@app.route("/reviews", methods=["GET", "POST"])
+def reviews():
+    error = None
+
+    if request.method == "POST":
+        if "user_id" not in session:
+            return redirect("/login")
+
+        review_text = request.form.get("review")
+        if not review_text or not review_text.strip():
+            error = "Review is verplicht"
+        else:
+            review_text = review_text.strip()
+            db.execute(
+                "INSERT INTO PARK_REVIEWS (user_id, review, created_at) VALUES (?, ?, datetime('now'))",
+                session["user_id"], review_text
+            )
+            return redirect("/reviews")
+
+    animal_reviews = db.execute(
+        "SELECT REVIEWS.id AS review_id, REVIEWS.review, REVIEWS.created_at, REVIEWS.user_id, USERS.username, DIEREN.naam AS dier_naam "
+        "FROM REVIEWS "
+        "JOIN USERS ON REVIEWS.user_id = USERS.id "
+        "JOIN DIEREN ON REVIEWS.dier_id = DIEREN.id "
+        "ORDER BY REVIEWS.created_at DESC"
+    )
+
+    park_reviews = db.execute(
+        "SELECT PARK_REVIEWS.id AS review_id, PARK_REVIEWS.review, PARK_REVIEWS.created_at, PARK_REVIEWS.user_id, USERS.username "
+        "FROM PARK_REVIEWS "
+        "JOIN USERS ON PARK_REVIEWS.user_id = USERS.id "
+        "ORDER BY PARK_REVIEWS.created_at DESC"
+    )
+
+    return render_template("reviews.html", animal_reviews=animal_reviews, park_reviews=park_reviews, error=error)
 
 @app.route("/dier/<naam>", methods=["GET", "POST"])
 def dierpagina(naam):
@@ -68,7 +112,7 @@ def dierpagina(naam):
                 )
             else:
                 db.execute(
-                    "INSERT INTO REVIEWS (user_id, dier_id, review) VALUES (?, ?, ?)",
+                    "INSERT INTO REVIEWS (user_id, dier_id, review, created_at) VALUES (?, ?, ?, datetime('now'))",
                     session["user_id"], dier["id"], review_text
                 )
             return redirect(f"/dier/{naam}")
@@ -100,6 +144,48 @@ def delete_review(naam):
 
     db.execute("DELETE FROM REVIEWS WHERE id = ?", review_id)
     return redirect(f"/dier/{naam}")
+
+@app.route("/reviews/park/delete", methods=["POST"])
+def delete_park_review():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    review_id = request.form.get("review_id")
+    if not review_id:
+        return redirect("/reviews")
+
+    try:
+        review_id = int(review_id)
+    except ValueError:
+        return redirect("/reviews")
+
+    review = db.execute("SELECT * FROM PARK_REVIEWS WHERE id = ?", review_id)
+    if len(review) == 0 or review[0]["user_id"] != session["user_id"]:
+        return redirect("/reviews")
+
+    db.execute("DELETE FROM PARK_REVIEWS WHERE id = ?", review_id)
+    return redirect("/reviews")
+
+@app.route("/reviews/animal/delete", methods=["POST"])
+def delete_animal_review():
+    if "user_id" not in session:
+        return redirect("/login")
+
+    review_id = request.form.get("review_id")
+    if not review_id:
+        return redirect("/reviews")
+
+    try:
+        review_id = int(review_id)
+    except ValueError:
+        return redirect("/reviews")
+
+    review = db.execute("SELECT * FROM REVIEWS WHERE id = ?", review_id)
+    if len(review) == 0 or review[0]["user_id"] != session["user_id"]:
+        return redirect("/reviews")
+
+    db.execute("DELETE FROM REVIEWS WHERE id = ?", review_id)
+    return redirect("/reviews")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -155,68 +241,5 @@ def login():
 def logout():
     session.clear()
     return redirect("/")
-
-@app.route("/api/favorite", methods=["POST"])
-def toggle_favorite():
-    if "user_id" not in session:
-        return jsonify({"error": "Not logged in"}), 401
-    
-    data = request.get_json()
-    if not data:
-        return jsonify({"error": "Invalid JSON"}), 400
-
-    dier_id = data.get("dier_id")
-    try:
-        dier_id = int(dier_id)
-    except (TypeError, ValueError):
-        return jsonify({"error": "Invalid dier_id"}), 400
-    
-    user_id = session["user_id"]
-    
-    # Check if already favorited
-    existing = db.execute(
-        "SELECT * FROM FAVORIETEN WHERE user_id = ? AND dier_id = ?",
-        user_id, dier_id
-    )
-    
-    if len(existing) > 0:
-        # Remove favorite (unfavorite)
-        db.execute(
-            "DELETE FROM FAVORIETEN WHERE user_id = ? AND dier_id = ?",
-            user_id, dier_id
-        )
-        return jsonify({"favorited": False})
-    else:
-        # Check if user already has a favorite
-        current_favorite = db.execute(
-            "SELECT * FROM FAVORIETEN WHERE user_id = ?",
-            user_id
-        )
-        
-        if len(current_favorite) > 0:
-            # Remove old favorite and add new one
-            db.execute(
-                "DELETE FROM FAVORIETEN WHERE user_id = ?",
-                user_id
-            )
-        
-        # Add new favorite
-        db.execute(
-            "INSERT INTO FAVORIETEN (user_id, dier_id) VALUES (?, ?)",
-            user_id, dier_id
-        )
-        return jsonify({"favorited": True})
-
-@app.route("/api/favorite_status/<int:dier_id>")
-def favorite_status(dier_id):
-    if "user_id" not in session:
-        return jsonify({"favorited": False})
-    
-    favorite = db.execute(
-        "SELECT * FROM FAVORIETEN WHERE user_id = ? AND dier_id = ?",
-        session["user_id"], dier_id
-    )
-    return jsonify({"favorited": len(favorite) > 0})
-
 if __name__ == "__main__":
     app.run(debug=True)

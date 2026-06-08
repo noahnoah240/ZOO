@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="dier-container">
+    <div class="dier-content">
+        <h1>Reviews en ervaringen</h1>
+        <div class="reviews-summary">
+            <p>Hier zie je alle reviews over dieren in de dierentuin en algemene parkreviews van bezoekers.</p>
+            <p>Elke gebruiker kan 1 review plaatsen per dier en 1 over het park</p>
+            <p><strong>{{ animal_reviews | length }}</strong> dierreviews en <strong>{{ park_reviews | length }}</strong> algemene parkreviews.</p>
+        </div>
+
+        <section class="review-group">
+            <h2>Algemene park reviews</h2>
+            {% if park_reviews and park_reviews | length > 0 %}
+                <ul class="review-list">
+                    {% for review in park_reviews %}
+                        <li class="review-item">
+                            <div class="review-header">
+                                <strong>{{ review.username }}</strong>
+                                <span class="review-date">{{ review.created_at }}</span>
+                            </div>
+                            <p>{{ review.review }}</p>
+                            {% if session.get('user_id') == review.user_id %}
+                                <form method="post" action="/reviews/park/delete" class="review-delete-form">
+                                    <input type="hidden" name="review_id" value="{{ review.review_id }}">
+                                    <button type="submit" class="delete-review-button">Verwijder review</button>
+                                </form>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Er zijn nog geen algemene parkreviews. Wees de eerste!</p>
+            {% endif %}
+        </section>
+
+        <section class="review-group">
+            <h2>Reviews over dieren</h2>
+            {% if animal_reviews and animal_reviews | length > 0 %}
+                <ul class="review-list">
+                    {% for review in animal_reviews %}
+                        <li class="review-item">
+                            <div class="review-header">
+                                <strong>{{ review.username }}</strong>
+                                <span class="review-date">{{ review.created_at }}</span>
+                            </div>
+                            <p><strong>Dier:</strong> <a href="/dier/{{ review.dier_naam }}">{{ review.dier_naam }}</a></p>
+                            <p>{{ review.review }}</p>
+                            {% if session.get('user_id') == review.user_id %}
+                                <form method="post" action="/reviews/animal/delete" class="review-delete-form">
+                                    <input type="hidden" name="review_id" value="{{ review.review_id }}">
+                                    <button type="submit" class="delete-review-button">Verwijder review</button>
+                                </form>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Er zijn nog geen reviews over dieren.</p>
+            {% endif %}
+        </section>
+
+        <div class="review-form-container">
+            {% if session.get('user_id') %}
+                <h3>Laat een algemene park review achter</h3>
+                {% if error %}
+                    <p class="error">{{ error }}</p>
+                {% endif %}
+                <form method="post">
+                    <textarea name="review" rows="5" placeholder="Vertel ons wat je van het park vindt..." required></textarea>
+                    <button type="submit">Plaats algemene review</button>
+                </form>
+            {% else %}
+                <p><a href="/login">Log in</a> om een algemene park review te plaatsen.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
