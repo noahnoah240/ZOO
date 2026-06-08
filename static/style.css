@@ -303,7 +303,7 @@ body {
 .reviews-section {
   margin-top: 2rem;
   padding-top: 2rem;
-  border-top: 1px solid #eee;
+  border-top: 1px solid oklab(90.74799999999999% 0.00104 0.00022);
 }
 
 .review-list {
@@ -417,7 +417,7 @@ body {
 .dier-foto {
   position: absolute;
   top: 15%;
-  left: 65.3%;
+  left: 65.5%;
 }
 .kaart{
   position: absolute;
