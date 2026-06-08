@@ -37,6 +37,7 @@
 
             <div class="review-form-container">
                 {% if session.get('user_id') %}
+                    <p>Ingelogd als <strong>{{ session.get('username') }}</strong></p>
                     <h3>Laat een review achter</h3>
                     {% if error %}
                         <p class="error">{{ error }}</p>
