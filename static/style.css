@@ -391,7 +391,9 @@ body {
 }
 
 .review-delete-form {
+  display: inline-block;
   margin-top: 0.75rem;
+  margin-right: 0.75rem;
 }
 
 .delete-review-button {
@@ -598,7 +600,23 @@ body {
   display: flex;
   gap: 8px;
 }
-
+.edit-review-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  margin-left: 0.75rem;
+}
+.edit-review-link:hover {
+  background-color: #0056d2;
+}
 .edit-review-cancel {
   margin-left: 0;
 }
